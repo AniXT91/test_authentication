@@ -1,5 +1,14 @@
 const User = require("../model/user")
 const jwt = require("jsonwebtoken")
+const fs = require("fs")
+
+//READ FILE
+let secret;
+try {
+  secret = fs.readFileSync('scrt.txt', 'utf8');
+} catch (err) {
+  console.error('Error reading scrt.txt:', err);
+}
 
 //HANDLE ERRORS
 const handleErrors=(err)=>{
@@ -32,7 +41,7 @@ const handleErrors=(err)=>{
 const maxAge = 3*24*60*60;
  
 const createJWT =(id)=>{
-     return jwt.sign({id},'anime@911',{
+     return jwt.sign({id},secret,{
         expiresIn:maxAge
      });
 }

@@ -1,10 +1,21 @@
 const jwt = require('jsonwebtoken');
 const User = require("../model/user")
+const fs = require('fs')
+
+//READ FILE
+let secret;
+try {
+  secret = fs.readFileSync('scrt.txt', 'utf8');
+} catch (err) {
+  console.error('Error reading scrt.txt:', err);
+}
+
+console.log(secret)
 
 const checkAuth=(req,res,next)=>{
     const token = req.cookies.jwt
     if(token){
-            jwt.verify(token,'anime@911',(err,decodedToken)=>{
+            jwt.verify(token,secret,(err,decodedToken)=>{
                 if(err){
                     res.redirect('/login')
                 }else{
@@ -22,7 +33,7 @@ const checkAuth=(req,res,next)=>{
 const checkUserLogin = async(req,res,next)=>{
     const token = req.cookies.jwt
     if(token){
-            jwt.verify(token,'anime@911',async (err,decodedToken)=>{
+            jwt.verify(token,secret,async (err,decodedToken)=>{
                 if(err){
                     res.locals.user = null;
 
